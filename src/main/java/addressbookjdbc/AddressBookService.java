@@ -73,4 +73,15 @@ public class AddressBookService
 		
 		return null;
 	}
+
+	//uc19
+	public List<Contact> readDataForCity(String city) 
+	{
+		return addressBookDBService.readDataForCity(city);
+	}
+
+	public List<Contact> readDataForState(String state) 
+	{
+		return addressBookDBService.readDataForState(state);
+	}
 }

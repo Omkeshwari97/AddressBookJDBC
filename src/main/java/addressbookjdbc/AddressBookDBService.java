@@ -138,6 +138,18 @@ public class AddressBookDBService
 		String sql = String.format("select * from address_book where date_added between '%s' and '%s';", Date.valueOf(startDate), Date.valueOf(endDate));
 		return getAddressBookDataUsingDB(sql);
 	}
+
+	public List<Contact> readDataForCity(String city) 
+	{
+		String sql = String.format("select * from address_book where city = '%s';", city);
+		return getAddressBookDataUsingDB(sql);
+	}
+
+	public List<Contact> readDataForState(String state) 
+	{
+		String sql = String.format("select * from address_book where state = '%s';", state);
+		return getAddressBookDataUsingDB(sql);
+	}
 	
 	
 }
