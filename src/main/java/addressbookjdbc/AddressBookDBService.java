@@ -2,6 +2,7 @@ package addressbookjdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,7 +16,8 @@ public class AddressBookDBService
 {
 	private static final Logger log = LogManager.getLogger(AddressBookDBService.class);
 	private static AddressBookDBService addressBookDBService;
-
+	PreparedStatement addressBookDataPreparedStatement;
+	
 	public AddressBookDBService() 
 	{}
 	
@@ -53,14 +55,35 @@ public class AddressBookDBService
 	//uc16
 	public List<Contact> readData() 
 	{
+		String sql = "Select * from address_book;";
+		return this.getAddressBookDataUsingDB(sql);
+	}
+	
+	
+	public List<Contact> getAddressBookDataUsingDB(String sql)
+	{
 		List<Contact> addressBookList = new ArrayList<Contact>();
 		
 		try(Connection connection = this.getConnection()) 
 		{
-			Statement statement = connection.createStatement();
-			String sql = "Select * from address_book;";
-			ResultSet resultSet = statement.executeQuery(sql);
+			addressBookDataPreparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = addressBookDataPreparedStatement.executeQuery(sql);
 			
+			addressBookList = this.getAddressBookData(resultSet);
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		return addressBookList;
+	}
+	
+	public List<Contact> getAddressBookData(ResultSet resultSet)
+	{
+		List<Contact> addressBookList = new ArrayList<Contact>();
+		
+		try 
+		{
 			while(resultSet.next())
 			{
 				int id = resultSet.getInt("id");
@@ -75,11 +98,12 @@ public class AddressBookDBService
 				
 				addressBookList.add(new Contact(id, fname, lname, address, city, state, zip, phone, email));
 			}
-		} 
+		}
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 		}
+		
 		return addressBookList;
 	}
 }
