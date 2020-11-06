@@ -84,4 +84,10 @@ public class AddressBookService
 	{
 		return addressBookDBService.readDataForState(state);
 	}
+
+	public List<Contact> addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded) 
+	{
+		this.addressBookList.add(addressBookDBService.addContactToAddressBook(fname, lname, address, city, state, zip, phone, email, dateAdded));
+		return this.addressBookList;
+	}
 }

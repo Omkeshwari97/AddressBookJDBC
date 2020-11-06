@@ -139,6 +139,7 @@ public class AddressBookDBService
 		return getAddressBookDataUsingDB(sql);
 	}
 
+	//uc19
 	public List<Contact> readDataForCity(String city) 
 	{
 		String sql = String.format("select * from address_book where city = '%s';", city);
@@ -149,6 +150,38 @@ public class AddressBookDBService
 	{
 		String sql = String.format("select * from address_book where state = '%s';", state);
 		return getAddressBookDataUsingDB(sql);
+	}
+
+	//uc20
+	public Contact addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded) 
+	{
+		int contactId = -1;
+		
+		String sql = String.format("Insert into address_book (fname, lname, address, city, state, zip, phone, email, date_added) values"
+				+ "('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ;)", fname, lname, address, city, state, zip, phone, email, dateAdded);
+		
+		try(Connection connection = this.getConnection()) 
+		{
+			addressBookDataPreparedStatement = connection.prepareStatement(sql);
+			int rowsAffected = addressBookDataPreparedStatement.executeUpdate(sql, addressBookDataPreparedStatement.RETURN_GENERATED_KEYS);
+			
+			if(rowsAffected == 1)
+			{
+				ResultSet resultSet = addressBookDataPreparedStatement.getGeneratedKeys();
+			
+				if(resultSet.next())
+				{
+					contactId = resultSet.getInt("id");
+				}
+			}
+			
+			return new Contact(contactId, fname, lname, address, city, state, zip, phone, email);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	

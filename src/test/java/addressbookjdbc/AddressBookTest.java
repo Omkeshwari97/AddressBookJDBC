@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -59,5 +60,16 @@ public class AddressBookTest
 		addressBookService.readAddressBookData(IOService.DB_IO);
 		List<Contact> addressBookList = addressBookService.readDataForState("Maharashtra");
 		assertEquals(3, addressBookList.size());
+	}
+	
+	//uc20
+	public void givenNewContact_WhenAdded_ShouldSynWithDB()
+	{
+		AddressBookService addressBookService = new AddressBookService();
+		addressBookService.readAddressBookData(IOService.DB_IO);
+		List<Contact> addressBookList= addressBookService.addContactToAddressBook("Suru", "Pilare", "Maheshwari, Matunga", "Mumbai", "Maharashtra", "400018", "9876987600", "abc@gmail.com", "2020-03-15");
+		boolean result = addressBookService.checkAddressBookInSyncWithDB("Suru");
+		assertTrue(result);
+		assertEquals(4, addressBookList.size());
 	}
 }
