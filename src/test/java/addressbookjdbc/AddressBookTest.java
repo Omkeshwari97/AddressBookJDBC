@@ -3,6 +3,7 @@ package addressbookjdbc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Test;
@@ -29,5 +30,17 @@ public class AddressBookTest
 		addressBookService.updateAddressBookEmail("Piyush", "piush@gmail.com");
 		boolean result = addressBookService.checkAddressBookInSyncWithDB("Piyush");
 		assertTrue(result);
+	}
+	
+	//uc18
+	@Test
+	public void givenDateRange_WhenRetrieved_ShouldMatchPersonCount()
+	{
+		AddressBookService addressBookService = new AddressBookService();
+		addressBookService.readAddressBookData(IOService.DB_IO);
+		LocalDate startDate = LocalDate.of(2019, 01, 01);
+		LocalDate endDate = LocalDate.now();
+		List<Contact> addressBookList = addressBookService.readDataonDateRange(IOService.DB_IO, startDate, endDate);
+		assertEquals(3, addressBookList.size());
 	}
 }

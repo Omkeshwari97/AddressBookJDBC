@@ -1,11 +1,13 @@
 package addressbookjdbc;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,20 +128,15 @@ public class AddressBookDBService
 
 	public List<Contact> getAddressBookData(String fname) 
 	{
-		List<Contact> addressBookList = new ArrayList<Contact>();		
 		String sql = String.format("Select * from address_book where fname = '%s';", fname);
-		
-		try(Connection connection = this.getConnection()) 
-		{
-			addressBookDataPreparedStatement = connection.prepareStatement(sql);
-			ResultSet resultSet = addressBookDataPreparedStatement.executeQuery(sql);
-			addressBookList = this.getAddressBookData(resultSet);
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
-		return addressBookList;
+		return getAddressBookDataUsingDB(sql);
+	}
+
+	//uc18
+	public List<Contact> readDataonDateRange(LocalDate startDate, LocalDate endDate) 
+	{
+		String sql = String.format("select * from address_book where date_added between '%s' and '%s';", Date.valueOf(startDate), Date.valueOf(endDate));
+		return getAddressBookDataUsingDB(sql);
 	}
 	
 	

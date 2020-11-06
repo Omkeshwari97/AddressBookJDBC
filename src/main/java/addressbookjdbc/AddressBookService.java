@@ -1,5 +1,6 @@
 package addressbookjdbc;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class AddressBookService 
@@ -60,5 +61,16 @@ public class AddressBookService
 	{
 		List<Contact> addressBookDBList= addressBookDBService.getAddressBookData(fname);
 		return addressBookDBList.get(0).equals(getAddressBookData(fname));
+	}
+
+	//uc18
+	public List<Contact> readDataonDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) 
+	{
+		if(ioService.equals(IOService.DB_IO))
+		{
+			return addressBookDBService.readDataonDateRange(startDate, endDate);
+		}
+		
+		return null;
 	}
 }
