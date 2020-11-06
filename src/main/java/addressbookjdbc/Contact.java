@@ -10,6 +10,7 @@ public class Contact
     public String zip;
     public String phoneNumber;
     public String email;
+	public int id;
 
     public Contact(String firstName,String lastName,String address,String city,String state,String zip,String phoneNumber,String email)
     {
@@ -23,7 +24,13 @@ public class Contact
         this.email = email;
     }
 
-    @Override
+    public Contact(int id, String fname, String lname, String address, String city, String state, String zip, String phone, String email) 
+    {
+    	this(fname, lname, address, city, state, zip, phone, email);
+    	this.id = id;
+	}
+
+	@Override
     public boolean equals(Object other)
     {
         boolean result = false;
