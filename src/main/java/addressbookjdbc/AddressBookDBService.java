@@ -106,4 +106,41 @@ public class AddressBookDBService
 		
 		return addressBookList;
 	}
+	
+	//uc17
+	public int updatePersonEmail(String fname, String email) 
+	{
+		String sql = String.format("update address_book set email = '%s' where fname = '%s';", email, fname);
+		
+		try(Connection connection = this.getConnection()) 
+		{
+			addressBookDataPreparedStatement = connection.prepareStatement(sql);
+			return addressBookDataPreparedStatement.executeUpdate(sql);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public List<Contact> getAddressBookData(String fname) 
+	{
+		List<Contact> addressBookList = new ArrayList<Contact>();		
+		String sql = String.format("Select * from address_book where fname = '%s';", fname);
+		
+		try(Connection connection = this.getConnection()) 
+		{
+			addressBookDataPreparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = addressBookDataPreparedStatement.executeQuery(sql);
+			addressBookList = this.getAddressBookData(resultSet);
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		return addressBookList;
+	}
+	
+	
 }
