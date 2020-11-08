@@ -19,7 +19,7 @@ public class AddressBookTest
 	{
 		AddressBookService addressBookService = new AddressBookService();
 		List<Contact> addressBookData = addressBookService.readAddressBookData(IOService.DB_IO);
-		assertEquals(4, addressBookData.size());
+		assertEquals(5, addressBookData.size());
 	}
 	
 	//uc17
@@ -46,6 +46,7 @@ public class AddressBookTest
 	}
 	
 	//uc19
+	@Test
 	public void givenCityName_WhenRetrieved_ShouldMatchPersonCount()
 	{
 		AddressBookService addressBookService = new AddressBookService();
@@ -54,22 +55,24 @@ public class AddressBookTest
 		assertEquals(2, addressBookList.size());
 	}
 	
+	@Test
 	public void givenStateName_WhenRetrieved_ShouldMatchPersonCount()
 	{
 		AddressBookService addressBookService = new AddressBookService();
 		addressBookService.readAddressBookData(IOService.DB_IO);
 		List<Contact> addressBookList = addressBookService.readDataForState("Maharashtra");
-		assertEquals(3, addressBookList.size());
+		assertEquals(4, addressBookList.size());
 	}
 	
 	//uc20
+	@Test
 	public void givenNewContact_WhenAdded_ShouldSynWithDB()
 	{
 		AddressBookService addressBookService = new AddressBookService();
 		addressBookService.readAddressBookData(IOService.DB_IO);
-		List<Contact> addressBookList= addressBookService.addContactToAddressBook("Suru", "Pilare", "Maheshwari, Matunga", "Mumbai", "Maharashtra", "400018", "9876987600", "abc@gmail.com", "2020-03-15");
-		boolean result = addressBookService.checkAddressBookInSyncWithDB("Suru");
+		List<Contact> addressBookList= addressBookService.addContactToAddressBook("Madhuri", "Pilare", "Maheshwari, Matunga", "Mumbai", "Maharashtra", "400018", "9876987600", "abc@gmail.com", "2020-03-15", Arrays.asList("Family", "Profession"));
+		boolean result = addressBookService.checkAddressBookInSyncWithDB("Madhuri");
 		assertTrue(result);
-		assertEquals(4, addressBookList.size());
+		assertEquals(6, addressBookList.size());
 	}
 }

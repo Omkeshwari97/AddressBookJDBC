@@ -85,9 +85,16 @@ public class AddressBookService
 		return addressBookDBService.readDataForState(state);
 	}
 
-	public List<Contact> addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded) 
+	//uc20
+	public List<Contact> addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded, List<String> bookTypeList) 
 	{
-		this.addressBookList.add(addressBookDBService.addContactToAddressBook(fname, lname, address, city, state, zip, phone, email, dateAdded));
+		List<Contact> contactList = addressBookDBService.addContactToAddressBook(fname, lname, address, city, state, zip, phone, email, dateAdded, bookTypeList);
+		
+		for(Contact contactObj : contactList)		
+		{		
+			this.addressBookList.add(contactObj);
+		}
+			
 		return this.addressBookList;
 	}
 }

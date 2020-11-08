@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,16 +152,27 @@ public class AddressBookDBService
 	}
 
 	//uc20
-	public Contact addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded) 
+	public  List<Contact> addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded, List<String> bookTypeList) 
 	{
 		int contactId = -1;
+		Connection connection = null;
 		
-		String sql = String.format("Insert into address_book (fname, lname, address, city, state, zip, phone, email, date_added) values"
-				+ "('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ;)", fname, lname, address, city, state, zip, phone, email, dateAdded);
-		
-		try(Connection connection = this.getConnection()) 
+		try 
 		{
-			addressBookDataPreparedStatement = connection.prepareStatement(sql);
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
+		}
+		catch (Exception e1) 
+		{
+			e1.printStackTrace();
+		}
+		
+
+		String sql = String.format("Insert into address_book (fname, lname, address, city, state, zip, phone, email, date_added) values"
+				+ "('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", fname, lname, address, city, state, zip, phone, email, dateAdded);
+		
+		try (PreparedStatement addressBookDataPreparedStatement = connection.prepareStatement(sql))
+		{
 			int rowsAffected = addressBookDataPreparedStatement.executeUpdate(sql, addressBookDataPreparedStatement.RETURN_GENERATED_KEYS);
 			
 			if(rowsAffected == 1)
@@ -171,18 +181,108 @@ public class AddressBookDBService
 			
 				if(resultSet.next())
 				{
-					contactId = resultSet.getInt("id");
+					contactId = resultSet.getInt(1);
 				}
 			}
-			
-			return new Contact(contactId, fname, lname, address, city, state, zip, phone, email);
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			
+			try 
+			{
+				connection.rollback();
+			} 
+			catch (SQLException e1) 
+			{
+				e1.printStackTrace();
+			}
 		}
-		return null;
+		
+		List<Integer> bookIdList = new ArrayList<>();
+		
+		for(String bookTypeObj : bookTypeList)
+		{	
+			String sql1 = String.format("Select id from address_book_details where book_type = '%s';", bookTypeObj);
+		
+			try (PreparedStatement addressBookDataPreparedStatement = connection.prepareStatement(sql1))
+			{
+				ResultSet resultSet = addressBookDataPreparedStatement.executeQuery(sql1);
+				
+				while(resultSet.next())
+				{
+					int id = resultSet.getInt("id");
+					bookIdList.add(id);
+				}
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+				
+				try 
+				{
+					connection.rollback();
+				} 
+				catch (SQLException e1) 
+				{
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		List<Contact> contactList = new ArrayList<>();
+		
+		for(Integer bookIdObj : bookIdList)
+		{	
+			String sql2 = String.format("Insert into book_contact_map (book_id, contact_id) values (%d, %d)", bookIdObj, contactId);
+			
+			try (PreparedStatement addressBookDataPreparedStatement = connection.prepareStatement(sql2))
+			{
+				int rowsAffected = addressBookDataPreparedStatement.executeUpdate(sql2);
+				
+				if(rowsAffected == 1)
+				{	
+					 contactList.add(new Contact(contactId, fname, lname, address, city, state, zip, phone, email));
+				}
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+				
+				try 
+				{
+					connection.rollback();
+				} 
+				catch (SQLException e1) 
+				{
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		try 
+		{
+			connection.commit();
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			if(connection != null)
+			{
+				try 
+				{
+					connection.close();
+				} 
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return contactList;
 	}
-	
-	
 }
