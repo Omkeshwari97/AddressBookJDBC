@@ -1,5 +1,8 @@
 package addressbookjdbc;
 
+import java.util.List;
+import java.util.Objects;
+
 public class Contact
 {
     public String firstName;
@@ -11,6 +14,8 @@ public class Contact
     public String phoneNumber;
     public String email;
 	public int id;
+	public String date_added;
+	public List<String> bookTypeList;
 
     public Contact(String firstName,String lastName,String address,String city,String state,String zip,String phoneNumber,String email)
     {
@@ -30,6 +35,19 @@ public class Contact
     	this.id = id;
 	}
 
+	public Contact(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String date_added, List<String> bookTypeList) 
+	{
+		this(fname, lname, address, city, state, zip, phone, email);
+		this.date_added = date_added;
+		this.bookTypeList = bookTypeList;
+	}
+
+	@Override
+	public int hashCode() 
+	{
+		return Objects.hash(firstName, lastName);
+	}
+	
 	@Override
     public boolean equals(Object other)
     {
@@ -55,6 +73,12 @@ public class Contact
         return result;
     }
 
+	@Override
+	public String toString() 
+	{
+		return "ID : " + id + " First Name : " + firstName + " Last Name: " + lastName + " Address: " + address + " City: " + city + " State: " + state + " Zip: " + zip + " Phone Number: " + phoneNumber + " Email: " + email;
+	}
+	
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;

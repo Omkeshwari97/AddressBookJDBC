@@ -1,12 +1,19 @@
 package addressbookjdbc;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AddressBookService 
 {
 	public enum IOService{FILE_IO, DB_IO}
 	private List<Contact> addressBookList;
+	private static final Logger log = LogManager.getLogger(AddressBookDBService.class);
 	private AddressBookDBService addressBookDBService = new AddressBookDBService();
 
 	public AddressBookService() 
@@ -86,15 +93,31 @@ public class AddressBookService
 	}
 
 	//uc20
-	public List<Contact> addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded, List<String> bookTypeList) 
+	public void addContactToAddressBook(String fname, String lname, String address, String city, String state, String zip, String phone, String email, String dateAdded, List<String> bookTypeList) 
 	{
 		List<Contact> contactList = addressBookDBService.addContactToAddressBook(fname, lname, address, city, state, zip, phone, email, dateAdded, bookTypeList);
 		
-		for(Contact contactObj : contactList)		
-		{		
+		contactList.forEach(contactObj -> {		
+			System.out.println("a: " + contactObj.firstName);
 			this.addressBookList.add(contactObj);
+		});
+	}
+	
+	//uc21
+	public void addContactsToAddressBook(List<Contact> contactList) 
+	{	
+		contactList.forEach(contactObj -> {
+				this.addContactToAddressBook(contactObj.firstName, contactObj.lastName, contactObj.address, contactObj.city,contactObj.state, contactObj.zip, contactObj.phoneNumber, contactObj.email, contactObj.date_added, contactObj.bookTypeList);
+			});
+	}
+
+	public int countEntries(IOService ioService) 
+	{	
+		if(ioService.equals(IOService.DB_IO))
+		{
+			return this.addressBookList.size();
 		}
-			
-		return this.addressBookList;
+		
+		return 0;
 	}
 }

@@ -3,6 +3,8 @@ package addressbookjdbc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,7 @@ public class AddressBookTest
 	{
 		AddressBookService addressBookService = new AddressBookService();
 		List<Contact> addressBookData = addressBookService.readAddressBookData(IOService.DB_IO);
-		assertEquals(5, addressBookData.size());
+		assertEquals(8, addressBookData.size());
 	}
 	
 	//uc17
@@ -61,7 +63,7 @@ public class AddressBookTest
 		AddressBookService addressBookService = new AddressBookService();
 		addressBookService.readAddressBookData(IOService.DB_IO);
 		List<Contact> addressBookList = addressBookService.readDataForState("Maharashtra");
-		assertEquals(4, addressBookList.size());
+		assertEquals(6, addressBookList.size());
 	}
 	
 	//uc20
@@ -70,9 +72,28 @@ public class AddressBookTest
 	{
 		AddressBookService addressBookService = new AddressBookService();
 		addressBookService.readAddressBookData(IOService.DB_IO);
-		List<Contact> addressBookList= addressBookService.addContactToAddressBook("Madhuri", "Pilare", "Maheshwari, Matunga", "Mumbai", "Maharashtra", "400018", "9876987600", "abc@gmail.com", "2020-03-15", Arrays.asList("Family", "Profession"));
+		addressBookService.addContactToAddressBook("Madhuri", "Pilare", "Maheshwari, Matunga", "Mumbai", "Maharashtra", "400018", "9876987600", "abc@gmail.com", "2020-03-15", Arrays.asList("Family", "Profession"));
 		boolean result = addressBookService.checkAddressBookInSyncWithDB("Madhuri");
 		assertTrue(result);
-		assertEquals(6, addressBookList.size());
+	}
+	
+	//uc21
+	@Test
+	public void givenMultipleContacts_WhenAdded_SHouldMatchPersonCount()
+	{
+		Contact arrayOfContacts[] = {
+			new Contact("Lata", "Donadkar", "Kasturi Kunj, Sion", "Mumbai", "Maharashtra", "400022", "9876543210", "ladki@gmail.com", "2018-03-15", Arrays.asList("Family")),
+			new Contact("Mital", "Donadkar", "Gandhi square", "Surat", "Gujarat", "500084", "9969646413", "mitz@gmail.com", "2019-03-15", Arrays.asList("Friends", "Profession")),
+			new Contact("Ashwini", "Pilare", "MIDC, Chakan", "Pune", "Maharashtra", "400784", "9988776655", "ashp@gmail.com", "2019-03-15", Arrays.asList("Family", "Profession"))	
+		};
+		
+		AddressBookService addressBookService = new AddressBookService();
+		List<Contact> addressBookData = addressBookService.readAddressBookData(IOService.DB_IO);
+		Instant start = Instant.now();
+		addressBookService.addContactsToAddressBook(Arrays.asList(arrayOfContacts));
+		Instant end = Instant.now();
+		System.out.println("Duration without Thread: " + Duration.between(start, end));
+		int result = addressBookService.countEntries(IOService.DB_IO);
+		assertEquals(9, result);
 	}
 }
