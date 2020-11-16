@@ -137,7 +137,24 @@ public class AddressBookTest
 		AddressBookService addressBookService;
 		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
 		long entries = addressBookService.countEntries(IOService.Rest_IO);
-		assertEquals(2, entries);
+		assertEquals(3, entries);
 	}
-
+	
+	//uc23
+	@Test
+	public void givenNewContact_WhenAdded_ShouldMatch201sResponseAndCount()
+	{	
+		Contact arrayOfContacts[] = getContactList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		Contact contact = new Contact(0, "Vaidehi", "Naktode", "Dahanu", "Mumbai", "Maharsahtra", "400678", "9876543210", "van@gmail.com");
+		Response response = addContactToJsonServer(contact);
+		int statusCode = response.getStatusCode();
+		assertEquals(201, statusCode);
+		
+		contact = new Gson().fromJson(response.asString(), Contact.class);
+		addressBookService.addContactsToAddressBook(contact, IOService.Rest_IO);
+		long entries = addressBookService.countEntries(IOService.Rest_IO);
+		assertEquals(3, entries);
+	}
 }

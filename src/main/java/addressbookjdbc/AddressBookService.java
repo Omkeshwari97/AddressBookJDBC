@@ -111,6 +111,7 @@ public class AddressBookService
 			});
 	}
 
+	//uc22
 	public int countEntries(IOService ioService) 
 	{	
 		if(ioService.equals(IOService.DB_IO))
@@ -119,5 +120,19 @@ public class AddressBookService
 		}
 		
 		return this.addressBookList.size();
+	}
+	
+	//uc23
+	public void addContactsToAddressBook(Contact contact, IOService ioService) 
+	{
+		if(ioService.equals(ioService.Rest_IO))
+		{
+			addressBookList.add(contact);
+		}
+		
+		for(Contact objContact : addressBookList)
+		{
+			System.out.println(objContact.firstName);
+		}
 	}
 }
