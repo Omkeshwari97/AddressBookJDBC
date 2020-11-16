@@ -1,0 +1,25 @@
+{
+    "contact": [
+      {
+        "firstName": "Thorvi",
+        "lastName": "Naktode",
+        "address": "Bramhapuri",
+        "city": "Chandrapur",
+        "state": "Maharashtra",
+        "zip": "400567",
+        "phoneNumber": "9876543210",
+        "email": "th@gmail.com"
+      },
+      {
+        "firstName": "Gargi",
+        "lastName": "Naktode",
+        "address": "Vadsa",
+        "city": "Bhandara",
+        "state": "Maharashtra",
+        "zip": "400568",
+        "phoneNumber": "9876543210",
+        "email": "gz@gmail.com"
+      }
+    ]
+}
+  

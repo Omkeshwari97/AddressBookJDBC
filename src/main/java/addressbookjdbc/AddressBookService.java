@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 public class AddressBookService 
 {
-	public enum IOService{FILE_IO, DB_IO}
+	public enum IOService{FILE_IO, DB_IO, Rest_IO}
 	private List<Contact> addressBookList;
 	private static final Logger log = LogManager.getLogger(AddressBookDBService.class);
 	private AddressBookDBService addressBookDBService = new AddressBookDBService();
@@ -118,6 +118,6 @@ public class AddressBookService
 			return this.addressBookList.size();
 		}
 		
-		return 0;
+		return this.addressBookList.size();
 	}
 }

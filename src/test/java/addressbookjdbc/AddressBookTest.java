@@ -9,12 +9,19 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
 import addressbookjdbc.AddressBookService.IOService;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class AddressBookTest 
 {
+	/*
 	//uc16
 	@Test
 	public void givenAddressBookDB_WhenRetrieved_ShouldMatchEmployeeCount()
@@ -96,4 +103,41 @@ public class AddressBookTest
 		int result = addressBookService.countEntries(IOService.DB_IO);
 		assertEquals(9, result);
 	}
+	*/
+	//JSON
+	@Before
+	public void setup()
+	{
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+	
+	private Contact[] getContactList() 
+	{
+		Response response = RestAssured.get("/contact");
+		System.out.println("CONTACT ENTRIES IN JSONSERVER:\n" + response.asString());
+		Contact arrayOfContacts[] = new Gson().fromJson(response.asString(), Contact[].class);
+		return arrayOfContacts;
+	}
+	
+	private Response addContactToJsonServer(Contact contact) 
+	{
+		String contactJson = new Gson().toJson(contact);
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type", "application/json");
+		requestSpecification.body(contactJson);
+		return requestSpecification.post("/contact");
+	}
+	
+	//uc22
+	@Test
+	public void givenAddressBookDataInJSONServer_WhenRetrieved_ShouldMatchTheCount()
+	{
+		Contact arrayOfContacts[] = getContactList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		long entries = addressBookService.countEntries(IOService.Rest_IO);
+		assertEquals(2, entries);
+	}
+
 }
