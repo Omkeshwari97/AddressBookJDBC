@@ -1,5 +1,6 @@
 package addressbookjdbc;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -144,5 +145,13 @@ public class AddressBookService
 								.findFirst()
 								.orElse(null);
 		return contact;
+	}
+	
+	//uc25
+	public List<Contact> deleteContact(String name, IOService ioService) 
+	{		
+		Contact contact = this.getAddressBookData(name);
+		addressBookList.remove(contact);
+		return addressBookList;
 	}
 }

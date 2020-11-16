@@ -3,6 +3,7 @@ package addressbookjdbc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -178,5 +179,26 @@ public class AddressBookTest
 		Response response = requestSpecification.put("/contact/" + contact.id);
 		int statusCode = response.getStatusCode();
 		assertEquals(200, statusCode);
+	}
+	
+	//uc25
+	@Test
+	public void givenEmployeeToDelete_WhenDeleted_ShouldMatch200ResponseCode() throws SQLException
+	{
+		Contact arrayOfContacts[] = getContactList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		
+		Contact contact = addressBookService.getContactDetails("Thorvi");
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type", "application/json");
+		
+		Response response = requestSpecification.delete("/contact/" + contact.id);
+		int statusCode = response.getStatusCode();
+		assertEquals(200, statusCode);
+		
+		addressBookService.deleteContact("Thorvi", IOService.Rest_IO);
+		long entries = addressBookService.countEntries(IOService.Rest_IO);
+		assertEquals(1, entries);
 	}
 }
