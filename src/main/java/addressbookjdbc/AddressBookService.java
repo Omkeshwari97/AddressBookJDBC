@@ -135,4 +135,14 @@ public class AddressBookService
 			System.out.println(objContact.firstName);
 		}
 	}
+	
+	//uc24
+	Contact getContactDetails(String name) 
+	{
+		Contact contact = this.addressBookList.stream()
+								.filter(c -> c.firstName.equals(name))
+								.findFirst()
+								.orElse(null);
+		return contact;
+	}
 }

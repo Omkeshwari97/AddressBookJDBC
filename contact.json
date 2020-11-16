@@ -1,7 +1,6 @@
 {
   "contact": [
     {
-      "id": 1,
       "firstName": "Thorvi",
       "lastName": "Naktode",
       "address": "Bramhapuri",
@@ -9,7 +8,8 @@
       "state": "Maharashtra",
       "zip": "400567",
       "phoneNumber": "9876543210",
-      "email": "th@gmail.com"
+      "email": "th@gmail.com",
+      "id": 1
     },
     {
       "id": 2,
@@ -21,17 +21,6 @@
       "zip": "400568",
       "phoneNumber": "9876543210",
       "email": "gz@gmail.com"
-    },
-    {
-      "firstName": "Vaidehi",
-      "lastName": "Naktode",
-      "address": "Dahanu",
-      "city": "Mumbai",
-      "state": "Maharsahtra",
-      "zip": "400678",
-      "phoneNumber": "9876543210",
-      "email": "van@gmail.com",
-      "id": 3
     }
   ]
 }

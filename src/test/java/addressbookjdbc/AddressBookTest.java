@@ -137,9 +137,10 @@ public class AddressBookTest
 		AddressBookService addressBookService;
 		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
 		long entries = addressBookService.countEntries(IOService.Rest_IO);
-		assertEquals(3, entries);
+		assertEquals(2, entries);
 	}
 	
+	/*
 	//uc23
 	@Test
 	public void givenNewContact_WhenAdded_ShouldMatch201sResponseAndCount()
@@ -156,5 +157,26 @@ public class AddressBookTest
 		addressBookService.addContactsToAddressBook(contact, IOService.Rest_IO);
 		long entries = addressBookService.countEntries(IOService.Rest_IO);
 		assertEquals(3, entries);
+	}*/
+	
+	//uc24
+	@Test
+	public void givenNewPhoneNumber_WhenUpdated_ShouldMatch200Response()
+	{
+		Contact arrayOfContacts[] = getContactList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		
+		addressBookService.updateAddressBookEmail("Thorvi", "thorvinaktd@gmail.com");
+		Contact contact = addressBookService.getContactDetails("Thorvi");
+		
+		String contactJson = new Gson().toJson(contact);
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type", "application/json");
+		requestSpecification.body(contactJson);
+		
+		Response response = requestSpecification.put("/contact/" + contact.id);
+		int statusCode = response.getStatusCode();
+		assertEquals(200, statusCode);
 	}
 }
